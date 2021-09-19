@@ -48,6 +48,25 @@ class ListViewModel(application: Application):AndroidViewModel(application) {
         queue?.add(stringRequest)
     }
 
+    fun detail(id:String){
+        queue = Volley.newRequestQueue(getApplication())
+        var url = "http://adv.jitusolution.com/student.php?id=$id"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                val result = Gson().fromJson<Student>(response, Student::class.java)
+                studentsLD.value = listOf(result)
+                Log.d("success : ", response.toString())
+            },
+            { response ->
+                Log.d("error : ", response.toString())
+            })
+
+        stringRequest.tag = TAG
+        queue?.add(stringRequest)
+    }
+
     override fun onCleared() {
         super.onCleared()
         queue?.cancelAll(TAG)
